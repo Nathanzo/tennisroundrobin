@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Round Robin · Wightman Tennis Center</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #33a147;       /* logo green */
+    --green-deep: #237c35;
+    --blue: #1178be;        /* logo blue */
+    --blue-deep: #0d5f97;
+    --ball: #d7df23;        /* tennis-ball yellow */
+    --charcoal: #444648;    /* wordmark gray */
+    --ink: #2b2e30;
+    --ink-soft: #6b7075;
+    --cream: #f7f5f0;
+    --card: #ffffff;
+    --line: #e5e1d8;
+    --radius: 14px;
+    --serif: "Fraunces", "Georgia", serif;
+    --sans: "Inter", -apple-system, "Segoe UI", sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--sans);
+    background: var(--cream);
+    color: var(--ink);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---------- Nav ---------- */
+  .topnav {
+    background: #fff;
+    border-bottom: 1px solid var(--line);
+  }
+  .topnav-inner {
+    max-width: 1200px; margin: 0 auto;
+    padding: 12px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 20px;
+  }
+  .nav-logo img { height: 64px; width: auto; display: block; }
+  .nav-links { display: flex; gap: 28px; align-items: center; }
+  .nav-links a {
+    color: var(--ink-soft);
+    text-decoration: none;
+    font-size: 14.5px; font-weight: 600;
+  }
+  .nav-links a:hover { color: var(--ink); }
+
+  /* ---------- Header ---------- */
+  header {
+    background: #fff;
+    border-bottom: 1px solid var(--line);
+    padding: 60px 24px 64px;
+  }
+  .header-inner {
+    max-width: 1200px; margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    align-items: center;
+    gap: 48px;
+  }
+
+  .eyebrow {
+    font-size: 11.5px; font-weight: 700;
+    letter-spacing: .26em; text-transform: uppercase;
+    color: var(--green-deep);
+  }
+  header h1 {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: clamp(2.3rem, 5.5vw, 3.6rem);
+    color: var(--ink);
+    letter-spacing: .01em;
+    margin-top: 14px;
+  }
+  header .tagline {
+    margin-top: 16px;
+    color: var(--ink-soft);
+    font-size: 16px;
+    max-width: 52ch;
+  }
+  .hero-stats {
+    display: flex; gap: 28px; flex-wrap: wrap;
+    margin-top: 28px;
+  }
+  .hero-stats .stat {
+    display: inline-flex; align-items: center; gap: 9px;
+    font-size: 13.5px; font-weight: 600;
+    color: var(--ink-soft);
+  }
+  .hero-stats .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .dot.g { background: var(--green); }
+  .dot.b { background: var(--blue); }
+  .dot.y { background: #b9c027; }
+  .hero-art svg {
+    width: 100%; max-width: 470px; height: auto;
+    display: block; margin: 0 auto;
+    border-radius: 16px;
+    box-shadow: 0 26px 50px -20px rgba(28,39,51,.4);
+  }
+  @media (max-width: 860px) {
+    header { padding: 48px 20px 56px; }
+    .header-inner { grid-template-columns: 1fr; gap: 38px; text-align: center; }
+    header .tagline { margin-left: auto; margin-right: auto; }
+    .hero-stats { justify-content: center; }
+    .hero-art svg { max-width: 400px; }
+  }
+
+  /* ---------- Layout ---------- */
+  main { max-width: 1200px; margin: 40px auto 80px; padding: 0 24px; }
+
+  .panel {
+    background: var(--card);
+    border-radius: var(--radius);
+    border: 1px solid var(--line);
+    box-shadow: 0 16px 40px -22px rgba(68,70,72,.35);
+    padding: 34px 36px;
+  }
+
+  .panel h2 {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 1.35rem;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+  .panel .hint { color: var(--ink-soft); font-size: 14px; margin-bottom: 20px; }
+
+  textarea {
+    width: 100%;
+    min-height: 190px;
+    resize: vertical;
+    font-family: var(--sans);
+    font-size: 15.5px;
+    line-height: 1.8;
+    padding: 16px 18px;
+    border: 1.5px solid var(--line);
+    border-radius: 10px;
+    background: #fdfcfa;
+    color: var(--ink);
+    outline: none;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  textarea:focus {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(17,120,190,.14);
+  }
+
+  .panel.input-split {
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    overflow: hidden;
+  }
+  .input-left { padding: 32px 36px; }
+  .input-side {
+    background: #fbfaf6;
+    border-left: 1px solid var(--line);
+    padding: 30px;
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .sumline { display: flex; align-items: baseline; gap: 10px; }
+  .sumline .big {
+    font-family: var(--serif);
+    font-size: 2.5rem; font-weight: 600;
+    line-height: 1; color: var(--ink);
+  }
+  .sumline .lbl { color: var(--ink-soft); font-size: 14px; font-weight: 600; }
+  .sumline .lbl.warn { color: #8a3b2e; }
+  .side-meta { color: var(--ink-soft); font-size: 13.5px; font-weight: 600; min-height: 21px; }
+  .mini-seg {
+    display: flex; gap: 3px;
+    background: #f2efe8;
+    border-radius: 9px; padding: 3px;
+  }
+  .seg-btn {
+    border: none; background: transparent;
+    font-family: var(--sans); font-size: 13px; font-weight: 600;
+    color: var(--ink-soft);
+    padding: 7px 14px; border-radius: 7px;
+    cursor: pointer;
+  }
+  .seg-btn.active {
+    background: #fff; color: var(--ink);
+    box-shadow: 0 1px 3px rgba(0,0,0,.14);
+  }
+  .rounds-line {
+    display: flex; align-items: center; justify-content: space-between;
+    background: #fff; border: 1px solid var(--line); border-radius: 10px;
+    padding: 9px 14px;
+    font-size: 14px; font-weight: 600;
+  }
+  .stepper { display: flex; align-items: center; gap: 14px; }
+  .stepper b { font-size: 16px; min-width: 14px; text-align: center; }
+  .stepper .st {
+    width: 30px; height: 30px; border-radius: 8px;
+    border: 1.5px solid var(--line); background: #fff;
+    color: var(--ink-soft); font-size: 16px; font-weight: 700;
+    cursor: pointer; padding: 0;
+  }
+  .stepper .st:hover { border-color: var(--blue); color: var(--blue); }
+  .side-actions { margin-top: auto; display: flex; flex-direction: column; gap: 10px; }
+  .side-actions button { width: 100%; }
+
+  @media (max-width: 760px) {
+    .panel.input-split { grid-template-columns: 1fr; }
+    .input-side { border-left: none; border-top: 1px solid var(--line); }
+  }
+
+  button {
+    font-family: var(--sans);
+    font-size: 14.5px; font-weight: 600;
+    border-radius: 10px;
+    padding: 12px 22px;
+    cursor: pointer;
+    border: 1.5px solid transparent;
+    transition: transform .08s, box-shadow .15s, background .15s;
+  }
+  button:active { transform: translateY(1px); }
+  .btn-primary {
+    background: var(--blue);
+    color: #fff;
+    box-shadow: 0 8px 20px -8px rgba(17,120,190,.55);
+  }
+  .btn-primary:hover { background: var(--blue-deep); }
+  .btn-primary:disabled {
+    background: #bcc2c7; box-shadow: none; cursor: not-allowed;
+  }
+  .btn-ghost {
+    background: transparent;
+    color: var(--green-deep);
+    border-color: rgba(51,161,71,.45);
+  }
+  .btn-ghost:hover { background: rgba(51,161,71,.08); }
+
+  /* ---------- Results ---------- */
+  #results { margin-top: 44px; display: none; }
+  #results.show { display: block; animation: rise .4s ease; }
+  @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+  .note {
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    background: rgba(215,223,35,.14);
+    border: 1px solid rgba(180,186,40,.45);
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-bottom: 26px;
+  }
+  .note.perfect {
+    background: rgba(51,161,71,.08);
+    border-color: rgba(51,161,71,.35);
+  }
+
+  .round { margin-bottom: 42px; }
+  .roundbar {
+    display: flex; align-items: center; gap: 14px;
+    margin-bottom: 14px;
+  }
+  .roundbar h3 {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 1.5rem;
+    color: var(--ink);
+  }
+  .roundbar .chip {
+    font-size: 11.5px; font-weight: 700;
+    letter-spacing: .1em; text-transform: uppercase;
+    padding: 5px 12px; border-radius: 999px;
+  }
+  .round-green .chip { background: rgba(51,161,71,.12); color: var(--green-deep); }
+  .round-blue  .chip { background: rgba(17,120,190,.11); color: var(--blue-deep); }
+  .roundbar .rule { flex: 1; height: 1px; background: var(--line); }
+
+  .vrow {
+    display: grid;
+    grid-template-columns: 88px 1fr;
+    gap: 16px; align-items: center;
+    margin-bottom: 12px;
+  }
+  .vrow .courtno {
+    font-size: 11px; font-weight: 700;
+    letter-spacing: .14em; text-transform: uppercase;
+    color: var(--ink-soft);
+    text-align: right;
+  }
+  .strip {
+    border-radius: 12px; overflow: hidden; position: relative;
+    display: grid; grid-template-columns: 1fr 1fr;
+    border: 2.5px solid #fff;
+    outline: 1px solid var(--line);
+    box-shadow: 0 10px 24px -16px rgba(28,39,51,.35);
+    min-height: 64px;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .round-green .strip { background: #2f9a43; }
+  .round-blue  .strip { background: #1e7fc0; }
+  .strip::before {
+    content: "";
+    position: absolute; left: 50%; top: -4px; bottom: -4px;
+    width: 3px; background: #fff;
+    transform: translateX(-50%);
+    z-index: 1;
+  }
+  .strip .half {
+    display: flex; align-items: center; justify-content: center;
+    gap: 8px; padding: 12px 14px;
+    flex-wrap: wrap;
+  }
+  .nametag {
+    background: rgba(255,255,255,.95);
+    border-radius: 999px;
+    font-size: 13.5px; font-weight: 700;
+    padding: 6px 14px;
+    box-shadow: 0 2px 6px rgba(0,0,0,.16);
+    white-space: nowrap;
+  }
+  .vsball {
+    position: absolute; left: 50%; top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    width: 34px; height: 34px; border-radius: 50%;
+    background: var(--ball);
+    border: 2.5px solid #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9.5px; font-weight: 800; color: var(--ink);
+    box-shadow: 0 3px 8px rgba(0,0,0,.25);
+  }
+  @media (max-width: 560px) {
+    .vrow { grid-template-columns: 1fr; gap: 6px; }
+    .vrow .courtno { text-align: left; }
+  }
+
+  .how { margin-top: 44px; }
+  .how p { color: var(--ink-soft); font-size: 14.5px; max-width: 75ch; }
+  .how p + p { margin-top: 10px; }
+
+  footer {
+    text-align: center;
+    padding: 34px 24px 48px;
+    color: var(--ink-soft);
+    font-size: 12.5px;
+    letter-spacing: .06em;
+  }
+  footer .dot-g { color: var(--green); }
+  footer .dot-b { color: var(--blue); }
+
+  /* ---------- Print ---------- */
+  @media print {
+    header { padding: 20px 24px; border: none; }
+    header h1 { margin-top: 20px; font-size: 1.8rem; }
+    .eyebrow, .hero-stats { display: none !important; }
+    #input-panel, .actions, footer, .tagline, .topnav, .how, .hero-art { display: none !important; }
+    main { margin-top: 0; }
+    .panel, .strip { box-shadow: none; }
+    body { background: #fff; }
+    #results { display: block !important; margin-top: 10px; }
+  }
+
+  @media (max-width: 560px) {
+    .panel { padding: 26px 22px; }
+    header { padding: 32px 20px 40px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="topnav-inner">
+    <a class="nav-logo" href="#">
+      <img src="logo.png" alt="Wightman Tennis Center">
+    </a>
+    <div class="nav-links">
+      <a href="#how">How it works</a>
+      <a href="https://www.wightmantennis.org/" target="_blank" rel="noopener">Club site</a>
+    </div>
+  </div>
+</nav>
+
+<header>
+  <div class="header-inner">
+    <div class="hero-text">
+      <div class="eyebrow">Doubles Round Robin</div>
+      <h1>Round Robin Pairings</h1>
+      <p class="tagline">New partners and new opponents each round.</p>
+      <div class="hero-stats">
+        <span class="stat"><span class="dot g"></span>No repeat partners</span>
+        <span class="stat"><span class="dot b"></span>4 to 40+ players</span>
+        <span class="stat"><span class="dot y"></span>Print-ready courts</span>
+      </div>
+    </div>
+    <div class="hero-art">
+      <svg viewBox="0 0 400 230" role="img" aria-label="Doubles court with a rally in play">
+        <rect x="0" y="0" width="400" height="230" rx="14" fill="#1178be"/>
+        <rect x="44" y="43" width="312" height="144" fill="#2f9a43"/>
+        <g fill="rgba(255,255,255,.05)">
+          <rect x="83" y="43" width="39" height="144"/>
+          <rect x="161" y="43" width="39" height="144"/>
+          <rect x="239" y="43" width="39" height="144"/>
+          <rect x="317" y="43" width="39" height="144"/>
+        </g>
+        <g stroke="#ffffff" stroke-width="2.5" fill="none">
+          <rect x="44" y="43" width="312" height="144"/>
+          <line x1="44" y1="61" x2="356" y2="61"/>
+          <line x1="44" y1="169" x2="356" y2="169"/>
+          <line x1="116" y1="61" x2="116" y2="169"/>
+          <line x1="284" y1="61" x2="284" y2="169"/>
+          <line x1="116" y1="115" x2="284" y2="115"/>
+          <line x1="44" y1="115" x2="51" y2="115"/>
+          <line x1="349" y1="115" x2="356" y2="115"/>
+        </g>
+        <line x1="203" y1="36" x2="203" y2="194" stroke="rgba(0,0,0,.15)" stroke-width="3"/>
+        <line x1="200" y1="34" x2="200" y2="196" stroke="#ffffff" stroke-width="4"/>
+        <g fill="#ffffff" stroke="rgba(0,0,0,.2)" stroke-width="1">
+          <circle id="p-l1" cx="95" cy="80" r="7"/>
+          <circle id="p-l2" cx="150" cy="145" r="7"/>
+        </g>
+        <g fill="#2b2e30">
+          <circle id="p-r1" cx="305" cy="85" r="7"/>
+          <circle id="p-r2" cx="250" cy="145" r="7"/>
+        </g>
+        <ellipse id="ball-shadow" cx="153" cy="144" rx="6" ry="2.4" fill="rgba(0,0,0,.28)"/>
+        <circle id="ball" cx="150" cy="140" r="5.5" fill="#d7df23" stroke="#ffffff" stroke-width="1.5"/>
+      </svg>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="panel input-split" id="input-panel">
+    <div class="input-left">
+      <h2>Players</h2>
+      <p class="hint" id="entry-hint">One name per line. The player count must be a multiple of 4.</p>
+      <textarea id="names" placeholder="Margaret
+Robert
+Susan
+David
+…" spellcheck="false"></textarea>
+    </div>
+    <aside class="input-side">
+      <div class="sumline"><span class="big" id="sum-count">0</span><span class="lbl" id="sum-note">players</span></div>
+      <div class="side-meta" id="side-meta"></div>
+      <div class="rounds-line">Format
+        <span class="mini-seg" id="format-seg">
+          <button class="seg-btn" data-format="singles" type="button">Singles</button>
+          <button class="seg-btn active" data-format="doubles" type="button">Doubles</button>
+        </span>
+      </div>
+      <div class="rounds-line">Rounds
+        <span class="stepper">
+          <button class="st" id="rounds-minus" type="button" aria-label="Fewer rounds">−</button>
+          <b id="rounds-display">2</b>
+          <button class="st" id="rounds-plus" type="button" aria-label="More rounds">+</button>
+        </span>
+      </div>
+      <div class="side-actions">
+        <button class="btn-primary" id="generate-btn" disabled>Generate Pairings</button>
+        <button class="btn-ghost" id="shuffle-btn" style="display:none">Shuffle Again</button>
+        <button class="btn-ghost" id="print-btn" style="display:none">Print</button>
+      </div>
+    </aside>
+  </section>
+
+  <section id="results">
+    <div class="note" id="note"></div>
+    <div id="rounds"></div>
+  </section>
+
+  <section class="panel how" id="how">
+    <h2>How it works</h2>
+    <p>Type a name for each player and pick the number of rounds. Every player is on a court in every round, four to a court, two against two.</p>
+    <p>Partners are always new. Opponents repeat only when the player count makes repeats unavoidable. Shuffle Again gives a different draw. Print makes a copy for the front desk.</p>
+  </section>
+</main>
+
+<footer>
+  <span class="dot-g">●</span> <span class="dot-b">●</span><br>
+  Wightman Tennis Center · Round Robin Generator
+</footer>
+
+<script>
+(function () {
+  const namesEl = document.getElementById('names');
+  const sumCount = document.getElementById('sum-count');
+  const sumNote = document.getElementById('sum-note');
+  const sideMeta = document.getElementById('side-meta');
+  const entryHint = document.getElementById('entry-hint');
+  const roundsDisplay = document.getElementById('rounds-display');
+  const genBtn = document.getElementById('generate-btn');
+  const shuffleBtn = document.getElementById('shuffle-btn');
+  const printBtn = document.getElementById('print-btn');
+  const results = document.getElementById('results');
+  const roundsEl = document.getElementById('rounds');
+  const noteEl = document.getElementById('note');
+
+  function parseNames() {
+    return namesEl.value
+      .split(/[\n,]+/)
+      .map(s => s.trim())
+      .filter(Boolean);
+  }
+
+  let roundsCount = 2;
+  let format = 'doubles';
+  const groupSize = () => format === 'doubles' ? 4 : 2;
+
+  function updateStatus() {
+    const n = parseNames().length;
+    const size = groupSize();
+    const ok = n >= size && n % size === 0;
+    sumCount.textContent = n;
+    if (n === 0) {
+      sumNote.textContent = 'players';
+      sumNote.className = 'lbl';
+    } else if (ok) {
+      sumNote.textContent = 'players ready';
+      sumNote.className = 'lbl';
+    } else {
+      const remove = n % size;
+      const add = size - remove;
+      sumNote.textContent = 'players. Add ' + add + (n > size ? ' or remove ' + remove : '');
+      sumNote.className = 'lbl warn';
+    }
+    roundsDisplay.textContent = roundsCount;
+    const courts = n / size;
+    sideMeta.textContent = ok
+      ? courts + (courts === 1 ? ' court · ' : ' courts · ') + courts * roundsCount + ' matches'
+      : '';
+    genBtn.disabled = !ok;
+  }
+
+  function shuffle(arr) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  // A court is [p0, p1, p2, p3] meaning p0 & p1 vs p2 & p3.
+  function chunkIntoCourts(players) {
+    const courts = [];
+    for (let i = 0; i < players.length; i += 4) courts.push(players.slice(i, i + 4));
+    return courts;
+  }
+
+  function pairKey(a, b) { return a < b ? a + '|' + b : b + '|' + a; }
+
+  // Cumulative record of who partnered / met whom across rounds.
+  function emptyRel() { return { partner: {}, met: {} }; }
+  function addRelations(rel, courts) {
+    courts.forEach(c => {
+      if (c.length === 4) {
+        rel.partner[pairKey(c[0], c[1])] = true;
+        rel.partner[pairKey(c[2], c[3])] = true;
+      }
+      for (let i = 0; i < c.length; i++)
+        for (let j = i + 1; j < c.length; j++)
+          rel.met[pairKey(c[i], c[j])] = true;
+    });
+  }
+
+  // Score a candidate round 2 against round 1: lower is better.
+  function scoreRound(courts, rel) {
+    let s = 0;
+    courts.forEach(c => {
+      // repeated partner: worst offence
+      if (rel.partner[pairKey(c[0], c[1])]) s += 100;
+      if (rel.partner[pairKey(c[2], c[3])]) s += 100;
+      // any two people who shared a court before, sharing again
+      for (let i = 0; i < 4; i++)
+        for (let j = i + 1; j < 4; j++)
+          if (rel.met[pairKey(c[i], c[j])]) s += 10;
+    });
+    return s;
+  }
+
+  // Perfect construction for 4+ courts: each new court drafts one player
+  // from four different old courts, so nobody has seen anyone before.
+  function cyclicRound2(courts1) {
+    const c = courts1.length;
+    const courts2 = [];
+    for (let j = 0; j < c; j++) {
+      courts2.push(shuffle([
+        courts1[j][0],
+        courts1[(j + 1) % c][1],
+        courts1[(j + 2) % c][2],
+        courts1[(j + 3) % c][3],
+      ]));
+    }
+    return courts2;
+  }
+
+  // Pick the best of the three possible pairings within a court.
+  function bestPairing(c, rel) {
+    const options = [
+      [c[0], c[1], c[2], c[3]],
+      [c[0], c[2], c[1], c[3]],
+      [c[0], c[3], c[1], c[2]],
+    ];
+    let bo = options[0], bs = Infinity;
+    options.forEach(o => {
+      const s = scoreRound([o], rel);
+      if (s < bs) { bs = s; bo = o; }
+    });
+    return bo;
+  }
+
+  // Fill courts one at a time, preferring players who have not met anyone
+  // already seated on the court. Random order makes each attempt different.
+  function greedyCourts(players, rel) {
+    const pool = shuffle(players);
+    const courts = [];
+    while (pool.length) {
+      const court = [pool.shift()];
+      for (let m = 0; m < 3; m++) {
+        let bestIdx = 0, bestConf = Infinity;
+        for (let i = 0; i < pool.length; i++) {
+          let conf = 0;
+          for (const p of court) if (rel.met[pairKey(p, pool[i])]) conf++;
+          if (conf < bestConf) {
+            bestConf = conf; bestIdx = i;
+            if (conf === 0) break;
+          }
+        }
+        court.push(pool.splice(bestIdx, 1)[0]);
+      }
+      courts.push(court);
+    }
+    return courts;
+  }
+
+  // Build the next round: try the cyclic construction first (perfect against
+  // the previous round when there are 4+ courts), then greedy candidates.
+  function searchRound(players, rel, prevCourts) {
+    const numCourts = players.length / 4;
+    let best = null, bestScore = Infinity;
+    for (let t = 0; t < 2000 && bestScore > 0; t++) {
+      let candidate = (t === 0 && numCourts >= 4)
+        ? cyclicRound2(prevCourts)
+        : greedyCourts(players, rel);
+      candidate = candidate.map(c => bestPairing(c, rel));
+      const s = scoreRound(candidate, rel);
+      if (s < bestScore) { bestScore = s; best = candidate; }
+    }
+    return best;
+  }
+
+  // Count repeats across a full schedule.
+  function tallyRepeats(rounds) {
+    const rel = emptyRel();
+    let partnerRepeats = 0, rematches = 0;
+    rounds.forEach(courts => {
+      courts.forEach(c => {
+        if (c.length === 4) {
+          if (rel.partner[pairKey(c[0], c[1])]) partnerRepeats++;
+          if (rel.partner[pairKey(c[2], c[3])]) partnerRepeats++;
+        }
+        for (let i = 0; i < c.length; i++)
+          for (let j = i + 1; j < c.length; j++)
+            if (rel.met[pairKey(c[i], c[j])]) rematches++;
+      });
+      addRelations(rel, courts);
+    });
+    return { partnerRepeats, rematches };
+  }
+
+  // Singles: classic circle method. One player fixed, the rest rotate, so no
+  // one sees the same opponent twice in up to n-1 rounds.
+  function singlesSchedule(players, numRounds) {
+    const p = shuffle(players);
+    const n = p.length;
+    const rest = p.slice(1);
+    const rounds = [];
+    for (let r = 0; r < numRounds; r++) {
+      const k = rest.length > 0 ? r % rest.length : 0;
+      const arr = [p[0]].concat(rest.slice(k), rest.slice(0, k));
+      const courts = [];
+      for (let i = 0; i < n / 2; i++) courts.push([arr[i], arr[n - 1 - i]]);
+      rounds.push(courts);
+    }
+    return rounds;
+  }
+
+  function buildSchedule(players, numRounds) {
+    if (format === 'singles') return singlesSchedule(players, numRounds);
+    const rounds = [chunkIntoCourts(shuffle(players))];
+    const rel = emptyRel();
+    addRelations(rel, rounds[0]);
+    for (let r = 1; r < numRounds; r++) {
+      const next = searchRound(players, rel, rounds[r - 1]);
+      rounds.push(next);
+      addRelations(rel, next);
+    }
+    return rounds;
+  }
+
+  function generate() {
+    render(buildSchedule(parseNames(), roundsCount));
+  }
+
+  function esc(s) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  function pills(names) {
+    return names.map(n => '<span class="nametag">' + esc(n) + '</span>').join('');
+  }
+
+  function matchRow(court, idx) {
+    const half1 = court.length === 4 ? [court[0], court[1]] : [court[0]];
+    const half2 = court.length === 4 ? [court[2], court[3]] : [court[1]];
+    return '<div class="vrow">' +
+      '<span class="courtno">Court ' + (idx + 1) + '</span>' +
+      '<div class="strip">' +
+        '<div class="half">' + pills(half1) + '</div>' +
+        '<div class="half">' + pills(half2) + '</div>' +
+        '<span class="vsball">VS</span>' +
+      '</div></div>';
+  }
+
+  function render(rounds) {
+    const t = tallyRepeats(rounds);
+    if (t.partnerRepeats === 0 && t.rematches === 0) {
+      noteEl.className = 'note perfect';
+      noteEl.textContent = format === 'singles'
+        ? 'A new opponent in every round.'
+        : 'New partners and new opponents in every round.';
+    } else if (t.partnerRepeats === 0 && format === 'doubles') {
+      noteEl.className = 'note';
+      noteEl.textContent = 'Partners are always new. Some opponent rematches could not be avoided with this player count.';
+    } else {
+      noteEl.className = 'note';
+      noteEl.textContent = 'Not enough players for this many rounds without repeats. Repeats are kept to a minimum.';
+    }
+
+    roundsEl.innerHTML = rounds.map((courts, i) =>
+      '<div class="round ' + (i % 2 === 0 ? 'round-green' : 'round-blue') + '">' +
+        '<div class="roundbar"><h3>Round ' + (i + 1) + '</h3>' +
+        '<span class="chip">' + courts.length + (courts.length === 1 ? ' court' : ' courts') + '</span>' +
+        '<div class="rule"></div></div>' +
+        courts.map(matchRow).join('') + '</div>'
+    ).join('');
+
+    results.classList.add('show');
+    shuffleBtn.style.display = '';
+    printBtn.style.display = '';
+    results.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  namesEl.addEventListener('input', updateStatus);
+  genBtn.addEventListener('click', generate);
+  shuffleBtn.addEventListener('click', generate);
+  printBtn.addEventListener('click', () => window.print());
+  document.getElementById('rounds-minus').addEventListener('click', () => {
+    roundsCount = Math.max(2, roundsCount - 1);
+    updateStatus();
+  });
+  document.getElementById('rounds-plus').addEventListener('click', () => {
+    roundsCount = Math.min(5, roundsCount + 1);
+    updateStatus();
+  });
+  document.querySelectorAll('#format-seg .seg-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      format = btn.dataset.format;
+      document.querySelectorAll('#format-seg .seg-btn').forEach(b =>
+        b.classList.toggle('active', b === btn));
+      entryHint.textContent = format === 'singles'
+        ? 'One name per line. The player count must be even.'
+        : 'One name per line. The player count must be a multiple of 4.';
+      updateStatus();
+    });
+  });
+  updateStatus();
+})();
+
+// Hero rally: the ball travels between landing spots and the player due to
+// hit it moves to meet it, then drifts back home.
+(function () {
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const ball = document.getElementById('ball');
+  const shadow = document.getElementById('ball-shadow');
+  if (!ball) return;
+
+  const players = {
+    l1: { el: document.getElementById('p-l1'), home: { x: 95,  y: 80  }, pos: { x: 95,  y: 80  } },
+    l2: { el: document.getElementById('p-l2'), home: { x: 150, y: 145 }, pos: { x: 150, y: 145 } },
+    r1: { el: document.getElementById('p-r1'), home: { x: 305, y: 85  }, pos: { x: 305, y: 85  } },
+    r2: { el: document.getElementById('p-r2'), home: { x: 250, y: 145 }, pos: { x: 250, y: 145 } },
+  };
+
+  // Each entry: who hits, and where the ball is struck.
+  const hits = [
+    { p: 'l2', x: 150, y: 140 },
+    { p: 'r1', x: 318, y: 76  },
+    { p: 'l1', x: 72,  y: 108 },
+    { p: 'r2', x: 238, y: 162 },
+    { p: 'l2', x: 172, y: 118 },
+    { p: 'r1', x: 282, y: 66  },
+  ];
+  // Flight time follows shot distance, so long shots take longer.
+  const SPEED = 150; // px per second
+  const legs = hits.map((h, i) => {
+    const n = hits[(i + 1) % hits.length];
+    const d = Math.hypot(n.x - h.x, n.y - h.y);
+    return Math.min(1700, Math.max(950, d / SPEED * 1000));
+  });
+  const total = legs.reduce((a, b) => a + b, 0);
+
+  const easeOut = t => 1 - (1 - t) * (1 - t);
+  const easeInOut = t => t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+
+  let prevLeg = -1;
+  function frame(now) {
+    let tt = now % total;
+    let leg = 0;
+    while (tt > legs[leg]) { tt -= legs[leg]; leg++; }
+    const t = tt / legs[leg];
+    const from = hits[leg], to = hits[(leg + 1) % hits.length];
+
+    // At each new shot, lock in where every player runs during this leg:
+    // the next hitter runs to the ball, everyone else recovers home.
+    if (leg !== prevLeg) {
+      prevLeg = leg;
+      for (const k in players) {
+        const pl = players[k];
+        pl.segFrom = { x: pl.pos.x, y: pl.pos.y };
+        pl.segTo = (k === to.p) ? { x: to.x, y: to.y } : pl.home;
+      }
+    }
+
+    // Ball leaves the racquet fast, then decelerates.
+    const ft = easeOut(t);
+    const bx = from.x + (to.x - from.x) * ft;
+    const by = from.y + (to.y - from.y) * ft;
+    const lift = Math.sin(Math.PI * t);
+    ball.setAttribute('cx', bx);
+    ball.setAttribute('cy', by);
+    ball.setAttribute('r', 5 + 2.6 * lift);
+    shadow.setAttribute('cx', bx + 3);
+    shadow.setAttribute('cy', by + 4);
+    shadow.setAttribute('opacity', 0.3 - 0.18 * lift);
+
+    // Players ease to their spot and settle just before the ball arrives.
+    const pt = easeInOut(Math.min(1, t / 0.85));
+    for (const k in players) {
+      const pl = players[k];
+      pl.pos.x = pl.segFrom.x + (pl.segTo.x - pl.segFrom.x) * pt;
+      pl.pos.y = pl.segFrom.y + (pl.segTo.y - pl.segFrom.y) * pt;
+      pl.el.setAttribute('cx', pl.pos.x);
+      pl.el.setAttribute('cy', pl.pos.y);
+    }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
+
+</body>
+</html>
