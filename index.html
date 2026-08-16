@@ -800,6 +800,19 @@ David
     results.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
+  // Handoff from Who's In: names arrive in the URL fragment, which browsers
+  // never send to a server, so the roster stays on this device.
+  (function prefillFromLink() {
+    const m = /(?:^|&)players=([^&]*)/.exec(location.hash.slice(1));
+    if (!m) return;
+    let incoming;
+    try { incoming = decodeURIComponent(m[1]); } catch (_) { return; }
+    const list = incoming.split(/[\n,]+/).map(s => s.trim()).filter(Boolean);
+    if (!list.length) return;
+    namesEl.value = list.join('\n');
+    history.replaceState(null, '', location.pathname + location.search);
+  })();
+
   namesEl.addEventListener('input', updateStatus);
   genBtn.addEventListener('click', generate);
   shuffleBtn.addEventListener('click', generate);
