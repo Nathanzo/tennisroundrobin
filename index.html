@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tennis Round Robin Generator · Doubles &amp; Singles Pairings</title>
-<meta name="description" content="Free tennis round robin generator. Enter your players, pick the rounds, and get court pairings with no repeat partners and no repeat opponents. Doubles and singles, print ready.">
+<meta name="description" content="Free tennis round robin generator by yellowfelt. Enter your players, pick the rounds, and get court pairings with no repeat partners and no repeat opponents. Doubles and singles, print ready.">
 <link rel="canonical" href="https://tennisroundrobin.com/">
-<meta property="og:title" content="Tennis Round Robin Generator">
+<meta property="og:title" content="Tennis Round Robin Generator · by yellowfelt">
 <meta property="og:description" content="Enter your players and get court pairings with no repeat partners and no repeat opponents.">
 <meta property="og:url" content="https://tennisroundrobin.com/">
 <meta property="og:type" content="website">
@@ -63,10 +63,10 @@
   }
   .nav-logo svg { display: block; flex-shrink: 0; }
   .brand-name {
-    font-family: var(--serif);
-    font-size: 21px; font-weight: 600;
+    font-family: var(--sans);
+    font-size: 22px; font-weight: 800;
     color: var(--ink);
-    letter-spacing: .01em;
+    letter-spacing: -.02em;
     white-space: nowrap;
   }
   .nav-links { display: flex; gap: 28px; align-items: center; }
@@ -94,7 +94,13 @@
   .eyebrow {
     font-size: 11.5px; font-weight: 700;
     letter-spacing: .26em; text-transform: uppercase;
-    color: var(--green-deep);
+    color: var(--ink-soft);
+    display: inline-flex; align-items: center; gap: 9px;
+  }
+  .eyebrow::before {
+    content: "";
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--ball);
   }
   header h1 {
     font-family: var(--serif);
@@ -173,8 +179,8 @@
     transition: border-color .15s, box-shadow .15s;
   }
   textarea:focus {
-    border-color: var(--blue);
-    box-shadow: 0 0 0 3px rgba(17,120,190,.14);
+    border-color: #c3cb1b;
+    box-shadow: 0 0 0 3px rgba(215,223,35,.3);
   }
 
   .panel.input-split {
@@ -212,8 +218,8 @@
     cursor: pointer;
   }
   .seg-btn.active {
-    background: #fff; color: var(--ink);
-    box-shadow: 0 1px 3px rgba(0,0,0,.14);
+    background: var(--ball); color: var(--ink);
+    box-shadow: 0 1px 3px rgba(0,0,0,.12);
   }
   .rounds-line {
     display: flex; align-items: center; justify-content: space-between;
@@ -249,20 +255,20 @@
   }
   button:active { transform: translateY(1px); }
   .btn-primary {
-    background: var(--blue);
+    background: #232629;
     color: #fff;
-    box-shadow: 0 8px 20px -8px rgba(17,120,190,.55);
+    box-shadow: 0 8px 20px -8px rgba(35,38,41,.55);
   }
-  .btn-primary:hover { background: var(--blue-deep); }
+  .btn-primary:hover { background: #000; }
   .btn-primary:disabled {
     background: #bcc2c7; box-shadow: none; cursor: not-allowed;
   }
   .btn-ghost {
     background: transparent;
-    color: var(--green-deep);
-    border-color: rgba(51,161,71,.45);
+    color: var(--ink);
+    border-color: #d6d1c4;
   }
-  .btn-ghost:hover { background: rgba(51,161,71,.08); }
+  .btn-ghost:hover { background: #f1efe8; }
 
   /* ---------- Results ---------- */
   #results { margin-top: 44px; display: none; }
@@ -399,17 +405,13 @@
 
 <nav class="topnav">
   <div class="topnav-inner">
-    <a class="nav-logo" href="#" aria-label="Tennis Round Robin home">
-      <svg width="38" height="38" viewBox="0 0 64 64" role="img" aria-hidden="true">
-        <path d="M 9.4 23.8 A 24 24 0 0 1 54.6 23.8" fill="none" stroke="#33a147" stroke-width="7" stroke-linecap="round"/>
-        <path d="M 54.6 40.2 A 24 24 0 0 1 9.4 40.2" fill="none" stroke="#1178be" stroke-width="7" stroke-linecap="round"/>
-        <path d="M 61 26 L 50.5 20.5 L 52.5 32.5 Z" fill="#33a147"/>
-        <path d="M 3 38 L 13.5 43.5 L 11.5 31.5 Z" fill="#1178be"/>
-        <circle cx="32" cy="32" r="13" fill="#d7df23"/>
-        <path d="M 25.5 20.7 Q 19 32 25.5 43.3" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/>
-        <path d="M 38.5 20.7 Q 45 32 38.5 43.3" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/>
+    <a class="nav-logo" href="#" aria-label="yellowfelt home">
+      <svg width="34" height="34" viewBox="0 0 40 40" role="img" aria-hidden="true">
+        <circle cx="20" cy="20" r="18" fill="#d7df23"/>
+        <path d="M 12 4.8 Q 4.6 20 12 35.2" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+        <path d="M 28 4.8 Q 35.4 20 28 35.2" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
       </svg>
-      <span class="brand-name">Tennis Round Robin</span>
+      <span class="brand-name">yellowfelt</span>
     </a>
     <div class="nav-links">
       <a href="#how">How it works</a>
@@ -514,8 +516,8 @@ David
 </main>
 
 <footer>
-  <span class="dot-g">●</span> <span class="dot-b">●</span><br>
-  Tennis Round Robin · Free pairings generator
+  <svg width="14" height="14" viewBox="0 0 40 40" style="vertical-align:-2px"><circle cx="20" cy="20" r="18" fill="#d7df23"/><path d="M 12 4.8 Q 4.6 20 12 35.2 M 28 4.8 Q 35.4 20 28 35.2" fill="none" stroke="#fff" stroke-width="3"/></svg><br>
+  yellowfelt · tennis round robin
 </footer>
 
 <script>
